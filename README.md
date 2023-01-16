@@ -2,7 +2,10 @@
 
 ```
 $ python3 -m venv venv
-$ \venv\Scripts\Activate
+$ On Windows: 
+$- \venv\Scripts\Activate
+$ On Mac OS:
+$- source venv/bin/activate
 $ pip install requirements.txt
 ```
 

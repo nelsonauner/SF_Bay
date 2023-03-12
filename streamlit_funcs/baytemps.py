@@ -11,9 +11,9 @@ def import_data():
         d (pd.DataFrame) - A dataframe containing hourly San Francisco Bay water temperatures between 1994 and 2023
     """
     
-    d = pd.read_csv("data/water_temp/1994.csv")
+    d = pd.read_csv("water_temp_data/1994.csv")
     for year in np.arange(start = 1995, stop = 2023):
-        file = "data/water_temp/"+str(year)+".csv"
+        file = "water_temp_data/"+str(year)+".csv"
         year_data = pd.read_csv(file)
         d = pd.concat([d,year_data])
     

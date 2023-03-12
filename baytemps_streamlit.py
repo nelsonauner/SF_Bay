@@ -54,12 +54,6 @@ plt.plot(
     daily_average.loc[daily_average.year == year,"Mean"], 
     color = "Red", label = (str(year))
     )
-# #What has been collected so far in 2023
-# plt.plot(
-#     daily_average.loc[daily_average.year == 2023,"doy"],
-#     daily_average.loc[daily_average.year == 2023,"Mean"], 
-#     color = "Purple", label = ("2023 YTD")
-#     )
 ax.set_xlabel("Day Of Year")
 ax.set_ylabel("Average Temperature (\N{DEGREE SIGN}F)")
 ax.legend()

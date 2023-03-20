@@ -11,14 +11,15 @@ def import_data():
         d (pd.DataFrame) - A dataframe containing hourly San Francisco Bay water temperatures between 1994 and 2023
     """
     
-    d = pd.read_csv("water_temp_data/1994.csv")
-    for year in np.arange(start = 1995, stop = 2023):
-        file = "water_temp_data/"+str(year)+".csv"
-        year_data = pd.read_csv(file)
+    d = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date=19930414&end_date=19940413&station=9414290&time_zone=GMT&units=english&interval=h&format=csv")
+    for year in np.arange(start = 1994, stop = 2023):
+        url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date="+str(year)+"0414&end_date="+str(year+1)+"0413&station=9414290&time_zone=GMT&units=english&interval=h&format=csv"
+        #file = "data/water_temp/"+str(year)+".csv"
+        year_data = pd.read_csv(url)
         d = pd.concat([d,year_data])
-    
+    d[["date","time"]] = d["Date Time"].str.split(" ", expand = True)   
     #Cleaning up the dataframe
-    d.rename(columns = {d.columns[0]:"date", d.columns[1]:"time", d.columns[2]: "temp"}, inplace = True)
+    d.rename(columns = {d.columns[1]:"temp"}, inplace = True)
     d = d.loc[:,["date", "time", "temp"]]
     d.loc[d.temp == "-","temp"] = np.nan
     d.temp = d.temp.astype("float")

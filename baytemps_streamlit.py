@@ -10,10 +10,24 @@ import seaborn as sns
 import numpy as np
 from datetime import datetime as dt
 st.set_page_config(layout = "centered")
-st.write("# San Francisco Bay Water Temperature Explorer")
+st.write("## San Francisco Bay Water Temperature")
 
 d = bt.import_data()
 daily_average, da2 = bt.average_daily_data(data = d)
+
+
+todays_average = daily_average.iloc[-1,5]
+yesterdays_average = daily_average.iloc[-2,5]
+last_week_average = daily_average.iloc[[-8,-9,-10,-11,-12,-13,-14,-15],5].mean()
+day_delta = (todays_average - yesterdays_average).round(1)
+week_delta = (todays_average - last_week_average).round(1)
+col1,col2,col3 = st.columns(3)
+with col1:
+    st.metric("Today's Average Temperature", todays_average.round(1))
+with col2:
+    st.metric("Yesterday's Average Temperature", yesterdays_average.round(1), day_delta)
+with col3:
+    st.metric("Last Week's Average Temperature", last_week_average.round(1), week_delta)
 
 #Creating a year x day matrix of mean temperature values for use in the az.plot_hdi function
 interval_data = pd.DataFrame(

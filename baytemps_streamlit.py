@@ -54,7 +54,11 @@ plt.plot(
     daily_average.loc[daily_average.year == year,"Mean"], 
     color = "Red", label = (str(year))
     )
+
+plt.grid(axis='y', linestyle = "--")
 ax.set_xlabel("Day Of Year")
 ax.set_ylabel("Average Temperature (\N{DEGREE SIGN}F)")
+ax.set_ylim(bottom = 48, top = 67.5)
+ax.set_yticks(np.arange(49,68,1))
 ax.legend()
 st.pyplot(fig)

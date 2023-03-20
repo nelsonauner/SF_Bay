@@ -29,7 +29,7 @@ interval_data = interval_data.fillna(interval_data.mean())
 year = st.number_input(
     label = "Enter a year between 1994 and 2023",
     min_value = 1994, max_value = 2023, 
-    value = 2022
+    value = 2023
 )
 
 fig, ax = plt.subplots(figsize = (9,6))

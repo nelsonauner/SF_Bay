@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-@st.experimental_memo()
+@st.experimental_memo(ttl = 60*60)
 def import_data():
     """
     An argument-less function that imports all of the hourly SF Bay water data

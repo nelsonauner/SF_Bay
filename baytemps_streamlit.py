@@ -23,11 +23,11 @@ day_delta = (todays_average - yesterdays_average).round(1)
 week_delta = (todays_average - last_week_average).round(1)
 col1,col2,col3 = st.columns(3)
 with col1:
-    st.metric("Today's Average Temperature", todays_average.round(1))
+    st.metric("Today's Average Temperature", str(todays_average.round(1))+"\N{DEGREE SIGN}F")
 with col2:
-    st.metric("Yesterday's Average Temperature", yesterdays_average.round(1), day_delta)
+    st.metric("Yesterday's Average Temperature", str(yesterdays_average.round(1))+"\N{DEGREE SIGN}F", day_delta)
 with col3:
-    st.metric("Last Week's Average Temperature", last_week_average.round(1), week_delta)
+    st.metric("Last Week's Average Temperature", str(last_week_average.round(1))+"\N{DEGREE SIGN}F", week_delta)
 st.write("#### Most recent time point: "+str(d.iloc[-1,5])+"-"+str(d.iloc[-1,6])+"-"+str(d.iloc[-1,4])+" at "+str(d.iloc[-1,2])+" GMT")
 
 #Creating a year x day matrix of mean temperature values for use in the az.plot_hdi function

@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+from datetime import datetime
+from dateutil import tz
+
 
 @st.experimental_memo()
 def import_data():
@@ -10,6 +13,9 @@ def import_data():
     Returns:
         d (pd.DataFrame) - A dataframe containing hourly San Francisco Bay water temperatures between 1994 and 2023
     """
+
+    from_zone = tz.gettz("GMT")
+    to_zone = tz.gettz('America/Los_Angeles')
     
     d = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date=19930414&end_date=19940413&station=9414290&time_zone=GMT&units=english&interval=h&format=csv")
     for year in np.arange(start = 1994, stop = 2023):
@@ -17,6 +23,10 @@ def import_data():
         #file = "data/water_temp/"+str(year)+".csv"
         year_data = pd.read_csv(url)
         d = pd.concat([d,year_data])
+    d["Date Time"] = pd.to_datetime(d["Date Time"])
+    d["Date Time"] = d["Date Time"].replace(tzinfo = from_zone)
+    d["Date Time"] = d["Date Time"].astimezone(to_zone)
+    d["Date Time"] = d["Date Time"].astype("str")
     d[["date","time"]] = d["Date Time"].str.split(" ", expand = True)   
     #Cleaning up the dataframe
     d.rename(columns = {d.columns[1]:"temp"}, inplace = True)

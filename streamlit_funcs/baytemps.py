@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
+def doy(month,day):
+    months = [31,28,31,30,31,30,31,31,30,31,30,31]
+    return sum(months[0:month-1])+day
+
 @st.experimental_memo(ttl = 60*60)
 def import_data():
     """
@@ -20,6 +24,7 @@ def import_data():
     d["Date Time"] = pd.to_datetime(d["Date Time"])
     d["Date Time"] = d["Date Time"].astype("str")
     d[["date","time"]] = d["Date Time"].str.split(" ", expand = True)   
+    
     #Cleaning up the dataframe
     d.rename(columns = {d.columns[1]:"temp"}, inplace = True)
     d = d.loc[:,["date", "time", "temp"]]
@@ -32,7 +37,16 @@ def import_data():
     d["year"] = d.date.dt.year
     d["month"] = d.date.dt.month
     d["day"] = d.date.dt.day
-    d["doy"] = d.date.dt.dayofyear
+   
+    #Remove Feb29
+    d = d[~((d.date.dt.month == 2) & (d.date.dt.day == 29))]
+    
+    #Tag each day with day of year, assuming no leap years
+    d["doy"] = 0
+    for i in d.index:
+        d["doy"][i] = doy(d.month[i], d.day[i])
+
+
 
     return d
 
@@ -54,11 +68,9 @@ def average_daily_data(data: pd.DataFrame):
     daily_average.reset_index(inplace = True)
 
     #Daily average across all years
-    da2 = daily_average.groupby(by = ["doy"], as_index = False).agg(Mean = ("Mean", np.mean), Sd = ("Mean", np.std), N = ("Mean", len))
+    da2 = daily_average.groupby(by = ["doy","month","day"], as_index = False).agg(Mean = ("Mean", np.mean), Sd = ("Mean", np.std), N = ("Mean", len))
     da2.sort_values(by = ["doy"], inplace = True)
     da2.reset_index(inplace = True)
 
-    #5 Warmest and coldest days of the year on average
-    da2.sort_values(by = "Mean", inplace = False)
 
     return daily_average, da2

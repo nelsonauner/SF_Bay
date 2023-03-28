@@ -1,7 +1,6 @@
 import streamlit as st
 import streamlit_funcs.baytemps as bt
 
-import pymc as pm
 import arviz as az
 
 import pandas as pd
@@ -75,11 +74,14 @@ plt.plot(
     )
 
 plt.grid(axis='y', linestyle = "--")
-ax.set_xlabel("Day Of Year")
+ax.set_xlabel("Date")
 ax.set_ylabel("Average Temperature (\N{DEGREE SIGN}F)")
 ax.set_ylim(bottom = 48, top = 67.5)
+ax.set_xticks([1,32,60,91,121,152,182,213,244,274,305,335])
+ax.set_xticklabels(["Jan-1","Feb-1","Mar-1","Apr-1","May-1","Jun-1","Jul-1","Aug-1","Sep-1","Oct-1","Nov-1","Dec-1"])
 ax.set_yticks(np.arange(49,68,1))
 ax.legend()
+plt.xticks(rotation = 45)
 st.pyplot(fig)
 
 st.markdown("Data from [NOAA Tides & Currents](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290)")

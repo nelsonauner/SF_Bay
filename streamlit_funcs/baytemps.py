@@ -34,6 +34,7 @@ def import_data():
 
     #Formatting year, month, day columns
     d.date = pd.to_datetime(d.date)
+    d.date = d.date - pd.Timedelta(hours = 7)
     d["year"] = d.date.dt.year
     d["month"] = d.date.dt.month
     d["day"] = d.date.dt.day

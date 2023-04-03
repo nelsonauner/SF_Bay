@@ -11,7 +11,9 @@ from datetime import datetime as dt
 st.set_page_config(layout = "centered")
 st.write("## San Francisco Bay Water Temperature")
 
-d = bt.import_data()
+new_df = bt.import_data()
+old_df = pd.read_csv("up_to_2022.csv")
+d = pd.concat([old_df, new_df])
 daily_average, da2 = bt.average_daily_data(data = d)
 
 

@@ -16,7 +16,7 @@ def import_data():
     """
 
     d = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date=19930414&end_date=19940413&station=9414290&time_zone=GMT&units=english&interval=h&format=csv")
-    for year in np.arange(start = 1994, stop = 2023):
+    for year in np.arange(start = 2022, stop = 2023):
         url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date="+str(year)+"0414&end_date="+str(year+1)+"0413&station=9414290&time_zone=GMT&units=english&interval=h&format=csv"
         #file = "data/water_temp/"+str(year)+".csv"
         year_data = pd.read_csv(url)
@@ -34,7 +34,7 @@ def import_data():
 
     #Formatting year, month, day columns
     d.date = pd.to_datetime(d.date)
-    d.date = d.date - pd.Timedelta(hours = 7)
+    #d.date = d.date - pd.timedelta(hours = 7)
     d["year"] = d.date.dt.year
     d["month"] = d.date.dt.month
     d["day"] = d.date.dt.day

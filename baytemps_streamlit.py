@@ -29,7 +29,7 @@ with col2:
     st.metric("Yesterday's Average Temperature", str(yesterdays_average.round(1))+"\N{DEGREE SIGN}F", day_delta)
 with col3:
     st.metric("Last Week's Average Temperature", str(last_week_average.round(1))+"\N{DEGREE SIGN}F", week_delta)
-st.write("#### Most recent time point: "+str(d.iloc[-1,5])+"-"+str(d.iloc[-1,6])+"-"+str(d.iloc[-1,4])+" at "+str(d.iloc[-1,2])+" GMT")
+st.write("#### Most recent time point: "+str(d.iloc[-1,5])+"-"+str(d.iloc[-1,6])+"-"+str(d.iloc[-1,4])+" at "+str(d.iloc[-1,2])+" Pacific Time")
 
 
 st.markdown("""---""")

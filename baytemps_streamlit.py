@@ -16,7 +16,6 @@ old_df = pd.read_csv("up_to_2022.csv")
 d = pd.concat([old_df, new_df])
 daily_average, da2 = bt.average_daily_data(data = d)
 
-
 todays_average = daily_average.iloc[-1,5]
 yesterdays_average = daily_average.iloc[-2,5]
 last_week_average = daily_average.iloc[[-8,-9,-10,-11,-12,-13,-14,-15],5].mean()
@@ -29,7 +28,14 @@ with col2:
     st.metric("Yesterday's Average Temperature", str(yesterdays_average.round(1))+"\N{DEGREE SIGN}F", day_delta)
 with col3:
     st.metric("Last Week's Average Temperature", str(last_week_average.round(1))+"\N{DEGREE SIGN}F", week_delta)
-st.write("#### Most recent time point: "+str(d.iloc[-1,5])+"-"+str(d.iloc[-1,6])+"-"+str(d.iloc[-1,4])+" at "+str(d.iloc[-1,2])+" Pacific Time")
+st.write(
+    "#### Most recent: "+
+    str(d.iloc[-1,3])+"\N{DEGREE SIGN}F on "+ #temp
+    str(d.iloc[-1,5])+"-"+ #month
+    str(d.iloc[-1,6])+"-"+ #day
+    str(d.iloc[-1,4])+ #year
+    " at "+str(d.iloc[-1,2])+" Pacific Time" #Time
+    )
 
 
 st.markdown("""---""")

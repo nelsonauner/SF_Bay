@@ -20,11 +20,9 @@ except:
     st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
     st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
     d = pd.read_csv("up_to_2022.csv")
-
-st.markdown("""---""")
-
 daily_average, da2 = bt.average_daily_data(data = d)
 
+st.markdown("""---""")
 st.write(
     "#### Most recent: "+
     str(d.iloc[-1,3])+"\N{DEGREE SIGN}F on "+ #temp
@@ -34,7 +32,7 @@ st.write(
     " at "+str(d.iloc[-1,2])+" Pacific Time" #Time
     )
 
-
+#Metrics
 todays_average = daily_average.iloc[-1,5]
 yesterdays_average = daily_average.iloc[-2,5]
 last_week_average = daily_average.iloc[[-8,-9,-10,-11,-12,-13,-14,-15],5].mean()

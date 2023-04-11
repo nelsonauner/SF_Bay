@@ -6,7 +6,7 @@ def doy(month,day):
     months = [31,28,31,30,31,30,31,31,30,31,30,31]
     return sum(months[0:month-1])+day
 
-@st.experimental_memo(ttl = 60*60)
+@st.cache_data(ttl = 60*60)
 def import_data():
     """
     An argument-less function that imports all of the hourly SF Bay water data
@@ -51,7 +51,7 @@ def import_data():
 
     return d
 
-@st.experimental_memo
+@st.cache_data
 def average_daily_data(data: pd.DataFrame):
     """
     Takes the raw hourly temperature data and summarizes it into daily averages

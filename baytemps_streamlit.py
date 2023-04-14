@@ -14,13 +14,17 @@ st.write("## San Francisco Bay Water Temperature")
 #Try/except to account for times when the data retrieval from NOAA fails
 try:
     new_df = bt.import_data()
-    old_df = pd.read_csv("up_to_2022.csv")
+    old_df = pd.read_csv("up_to_2023.csv")
     d = pd.concat([old_df, new_df])
 except:
     st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
     st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
     d = pd.read_csv("up_to_2022.csv")
 daily_average, da2 = bt.average_daily_data(data = d)
+
+# df = bt.import_data()
+# st.write(df)
+# df.to_csv("up_to_2023.csv", index = False)
 
 st.markdown("""---""")
 st.write(

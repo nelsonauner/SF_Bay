@@ -106,3 +106,10 @@ plt.xticks(rotation = 45)
 st.pyplot(fig)
 
 st.markdown("Data from [NOAA Tides & Currents](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290)")
+
+
+# time = d[(d.year==year)&(d.month==4)].groupby("time").mean().reset_index()
+# fig,ax = plt.subplots()
+# ax.scatter(x = time.time, y = time.temp)
+# plt.xticks(rotation = 45)
+# st.pyplot(fig)

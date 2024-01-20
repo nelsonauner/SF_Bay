@@ -5,9 +5,9 @@ import arviz as az
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 from datetime import datetime as dt
+
 st.set_page_config(layout = "centered")
 st.write("## San Francisco Bay Water Temperature")
 
@@ -54,8 +54,8 @@ interval_data = interval_data.fillna(interval_data.mean())
 
 year = st.number_input(
     label = "Enter a year between 1994 and 2023",
-    min_value = 1994, max_value = 2023, 
-    value = 2023
+    min_value = 1994, max_value = 2024, 
+    value = 2024
 )
 
 fig, ax = plt.subplots(figsize = (9,6))

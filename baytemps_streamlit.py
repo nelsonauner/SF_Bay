@@ -11,11 +11,32 @@ from datetime import datetime as dt
 st.set_page_config(layout = "centered")
 st.write("## San Francisco Bay Water Temperature")
 
-new_df = bt.import_data()
-old_df = pd.read_csv("up_to_2022.csv")
-d = pd.concat([old_df, new_df])
+#Try/except to account for times when the data retrieval from NOAA fails
+try:
+    new_df = bt.import_data()
+    old_df = pd.read_csv("up_to_2023.csv")
+    d = pd.concat([old_df, new_df])
+except:
+    st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
+    st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
+    d = pd.read_csv("up_to_2022.csv")
 daily_average, da2 = bt.average_daily_data(data = d)
 
+# df = bt.import_data()
+# st.write(df)
+# df.to_csv("up_to_2023.csv", index = False)
+
+st.markdown("""---""")
+st.write(
+    "#### Most recent: "+
+    str(d.iloc[-1,3])+"\N{DEGREE SIGN}F on "+ #temp
+    str(d.iloc[-1,5])+"-"+ #month
+    str(d.iloc[-1,6])+"-"+ #day
+    str(d.iloc[-1,4])+ #year
+    " at "+str(d.iloc[-1,2])+" Pacific Time" #Time
+    )
+
+#Metrics
 todays_average = daily_average.iloc[-1,5]
 yesterdays_average = daily_average.iloc[-2,5]
 last_week_average = daily_average.iloc[[-8,-9,-10,-11,-12,-13,-14,-15],5].mean()
@@ -28,14 +49,6 @@ with col2:
     st.metric("Yesterday's Average Temperature", str(yesterdays_average.round(1))+"\N{DEGREE SIGN}F", day_delta)
 with col3:
     st.metric("Last Week's Average Temperature", str(last_week_average.round(1))+"\N{DEGREE SIGN}F", week_delta)
-st.write(
-    "#### Most recent: "+
-    str(d.iloc[-1,3])+"\N{DEGREE SIGN}F on "+ #temp
-    str(d.iloc[-1,5])+"-"+ #month
-    str(d.iloc[-1,6])+"-"+ #day
-    str(d.iloc[-1,4])+ #year
-    " at "+str(d.iloc[-1,2])+" Pacific Time" #Time
-    )
 
 
 st.markdown("""---""")
@@ -93,3 +106,10 @@ plt.xticks(rotation = 45)
 st.pyplot(fig)
 
 st.markdown("Data from [NOAA Tides & Currents](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290)")
+
+
+# time = d[(d.year==year)&(d.month==4)].groupby("time").mean().reset_index()
+# fig,ax = plt.subplots()
+# ax.scatter(x = time.time, y = time.temp)
+# plt.xticks(rotation = 45)
+# st.pyplot(fig)

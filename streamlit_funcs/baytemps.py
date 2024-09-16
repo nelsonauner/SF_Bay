@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-from sqlalchemy import create_engine, text
-
 def doy(month,day):
     months = [31,28,31,30,31,30,31,31,30,31,30,31]
     return sum(months[0:month-1])+day
@@ -80,21 +78,14 @@ def average_daily_data(data: pd.DataFrame):
 
 @st.cache_data
 def garmin_data():
-    host = 'database-1.czqca8wamlvu.us-east-2.rds.amazonaws.com'
-    port = '3306'
-    dbname="garmin"
-    user=st.secrets["DB_USERNAME"]
-    password=st.secrets["DB_PASSWORD"]
-
-    connection_string = f'mysql+mysqlconnector://{user}:{password}@{host}:{port}/{dbname}'
-    engine = create_engine(connection_string)
+    conn=st.connection("mysql", type='sql')
     
     query = "SELECT startTimeLocal date, minTemperature*1.8+32 temp FROM garmin.activities\
         WHERE activityName = 'San Francisco County Open Water Swimming'\
         AND elapsedDuration/3600 > 0.25\
         AND minTemperature IS NOT NULL\
     "
-    d=pd.read_sql(query, engine).reset_index()
+    d=conn.query(query, ttl=600).reset_index()
     d.date = pd.to_datetime(d.date)
     d=d.sort_values(by="date")
     d["temprolling"]=d["temp"].rolling(window=5).mean()

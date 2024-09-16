@@ -2,3 +2,4 @@ venv/
 .DS_Store
 Data/.DS_Store
 streamlit_funcs/__pycache__
+.streamlit/

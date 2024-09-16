@@ -39,7 +39,7 @@ daily_average, da2 = bt.average_daily_data(data = d)
 st.markdown("""---""")
 st.write(
     "#### Most recent: "+
-    str(d.iloc[-1,3])+"\N{DEGREE SIGN}F on "+ #temp
+    str(d.iloc[-1,3].round(1))+"\N{DEGREE SIGN}F on "+ #temp
     str(d.iloc[-1,5])+"-"+ #month
     str(d.iloc[-1,6])+"-"+ #day
     str(d.iloc[-1,4])+ #year

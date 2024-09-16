@@ -11,7 +11,6 @@ from datetime import datetime as dt
 st.set_page_config(layout = "centered")
 st.write("## San Francisco Bay Water Temperature")
 
-
 #Try/except to account for times when the data retrieval from NOAA fails
 # try:
 #     new_df = bt.import_data()
@@ -19,12 +18,19 @@ st.write("## San Francisco Bay Water Temperature")
 #     d = pd.concat([old_df, new_df])
 #     d2=bt.garmin_data()
 # except:
-st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
-st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
+# st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
+# st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
+
+st.markdown(""":red[
+            The NOAA temperature gauge has been offline for most of 2024 due to it being buried in the sand.
+            Therefore, the 2024 temperature data is comprised of minimum temperatures collected by my Garmin watch on the days that I swim.
+            ]""")
+
 d = pd.read_csv("up_to_2024.csv")
 d2=bt.garmin_data()
 d=pd.concat([d, d2])
 daily_average, da2 = bt.average_daily_data(data = d)
+
 # df = bt.import_data()
 # st.write(df)
 # df.to_csv("up_to_2024.csv", index = False)
@@ -112,7 +118,7 @@ ax.legend()
 plt.xticks(rotation = 45)
 st.pyplot(fig)
 
-st.markdown("Data from [NOAA Tides & Currents](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290)")
+st.markdown("Data from [NOAA Tides & Currents](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) and my personal Garmin Watch.")
 
 
 # time = d[(d.year==year)&(d.month==4)].groupby("time").mean().reset_index()

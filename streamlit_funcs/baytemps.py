@@ -78,6 +78,9 @@ def average_daily_data(data: pd.DataFrame):
 
 @st.cache_data
 def garmin_data():
+
+    """Pulls data from a personal garmin watch database and formats it to match the NOAA temperature data."""
+
     conn=st.connection("mysql", type='sql')
     
     query = "SELECT startTimeLocal date, minTemperature*1.8+32 temp FROM garmin.activities\

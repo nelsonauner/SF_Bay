@@ -83,8 +83,8 @@ def garmin_data():
     host = 'database-1.czqca8wamlvu.us-east-2.rds.amazonaws.com'
     port = '3306'
     dbname="garmin"
-    user="aseaotter"
-    password="11111111"
+    user=st.secrets["DB_USERNAME"]
+    password=st.secrets["DB_PASSWORD"]
 
     connection_string = f'mysql+mysqlconnector://{user}:{password}@{host}:{port}/{dbname}'
     engine = create_engine(connection_string)

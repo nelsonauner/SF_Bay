@@ -11,20 +11,24 @@ from datetime import datetime as dt
 st.set_page_config(layout = "centered")
 st.write("## San Francisco Bay Water Temperature")
 
-#Try/except to account for times when the data retrieval from NOAA fails
-try:
-    new_df = bt.import_data()
-    old_df = pd.read_csv("up_to_2023.csv")
-    d = pd.concat([old_df, new_df])
-except:
-    st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
-    st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
-    d = pd.read_csv("up_to_2022.csv")
-daily_average, da2 = bt.average_daily_data(data = d)
 
+#Try/except to account for times when the data retrieval from NOAA fails
+# try:
+#     new_df = bt.import_data()
+#     old_df = pd.read_csv("up_to_2024.csv")
+#     d = pd.concat([old_df, new_df])
+#     d2=bt.garmin_data()
+# except:
+st.markdown("##### :red[There was an error retrieving the most recent data. You are viewing an archived subset.]")
+st.markdown("##### :red[Feel free to visit the [NOAA webiste](https://tidesandcurrents.noaa.gov/stationhome.html?id=9414290) to view more up-to-date info, or check back here in a few hours]")
+d = pd.read_csv("up_to_2024.csv")
+d2=bt.garmin_data()
+d=pd.concat([d, d2])
+daily_average, da2 = bt.average_daily_data(data = d)
 # df = bt.import_data()
 # st.write(df)
-# df.to_csv("up_to_2023.csv", index = False)
+# df.to_csv("up_to_2024.csv", index = False)
+
 
 st.markdown("""---""")
 st.write(
@@ -37,18 +41,21 @@ st.write(
     )
 
 #Metrics
-todays_average = daily_average.iloc[-1,5]
-yesterdays_average = daily_average.iloc[-2,5]
-last_week_average = daily_average.iloc[[-8,-9,-10,-11,-12,-13,-14,-15],5].mean()
-day_delta = (todays_average - yesterdays_average).round(1)
-week_delta = (todays_average - last_week_average).round(1)
-col1,col2,col3 = st.columns(3)
-with col1:
-    st.metric("Today's Average Temperature", str(todays_average.round(1))+"\N{DEGREE SIGN}F")
-with col2:
-    st.metric("Yesterday's Average Temperature", str(yesterdays_average.round(1))+"\N{DEGREE SIGN}F", day_delta)
-with col3:
-    st.metric("Last Week's Average Temperature", str(last_week_average.round(1))+"\N{DEGREE SIGN}F", week_delta)
+try:
+    todays_average = daily_average.iloc[-1,5]
+    yesterdays_average = daily_average.iloc[-2,5]
+    last_week_average = daily_average.iloc[[-8,-9,-10,-11,-12,-13,-14,-15],5].mean()
+    day_delta = (todays_average - yesterdays_average).round(1)
+    week_delta = (todays_average - last_week_average).round(1)
+    col1,col2,col3 = st.columns(3)
+    with col1:
+        st.metric("Today's Average Temperature", str(todays_average.round(1))+"\N{DEGREE SIGN}F")
+    with col2:
+        st.metric("Yesterday's Average Temperature", str(yesterdays_average.round(1))+"\N{DEGREE SIGN}F", day_delta)
+    with col3:
+        st.metric("Last Week's Average Temperature", str(last_week_average.round(1))+"\N{DEGREE SIGN}F", week_delta)
+except:
+    pass
 
 
 st.markdown("""---""")

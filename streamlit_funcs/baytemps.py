@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
+from sqlalchemy import create_engine, text
+
 def doy(month,day):
     months = [31,28,31,30,31,30,31,31,30,31,30,31]
     return sum(months[0:month-1])+day
@@ -16,7 +18,7 @@ def import_data():
     """
 
     d = pd.read_csv("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date=19930414&end_date=19940413&station=9414290&time_zone=lst_ldt&units=english&interval=h&format=csv")
-    for year in np.arange(start = 2022, stop = 2024):
+    for year in np.arange(start = 2023, stop = 2024):
         url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&application=NOS.COOPS.TAC.PHYSOCEAN&begin_date="+str(year)+"0414&end_date="+str(year+1)+"0413&station=9414290&time_zone=lst_ldt&units=english&interval=h&format=csv"
         #file = "data/water_temp/"+str(year)+".csv"
         year_data = pd.read_csv(url)
@@ -75,3 +77,39 @@ def average_daily_data(data: pd.DataFrame):
 
 
     return daily_average, da2
+
+@st.cache_data
+def garmin_data():
+    host = 'database-1.czqca8wamlvu.us-east-2.rds.amazonaws.com'
+    port = '3306'
+    dbname="garmin"
+    user="aseaotter"
+    password="11111111"
+
+    connection_string = f'mysql+mysqlconnector://{user}:{password}@{host}:{port}/{dbname}'
+    engine = create_engine(connection_string)
+    
+    query = "SELECT startTimeLocal date, minTemperature*1.8+32 temp FROM garmin.activities\
+        WHERE activityName = 'San Francisco County Open Water Swimming'\
+        AND elapsedDuration/3600 > 0.25\
+        AND minTemperature IS NOT NULL\
+    "
+    d=pd.read_sql(query, engine).reset_index()
+    d.date = pd.to_datetime(d.date)
+    d=d.sort_values(by="date")
+    d["temprolling"]=d["temp"].rolling(window=5).mean()
+    d.temp=d.temprolling
+    d=d.drop(labels="temprolling", axis=1)
+    
+    d["time"] = d.date.dt.time
+    d["year"] = d.date.dt.year
+    d["month"] = d.date.dt.month
+    d["day"] = d.date.dt.day
+
+    #Tag each day with day of year, assuming no leap years
+    d["doy"] = 0
+    for i in d.index:
+        d["doy"][i] = doy(d.month[i], d.day[i])
+
+    d=d[["index", "date", "time", "temp", "year", "month", "day", "doy"]]
+    return(d)

@@ -27,6 +27,7 @@ st.markdown(""":red[
             ]""")
 
 d = pd.read_csv("up_to_2024.csv")
+d["source"]="NOAA"
 d2=bt.garmin_data()
 d=pd.concat([d, d2])
 daily_average, da2 = bt.average_daily_data(data = d)
@@ -67,11 +68,14 @@ except:
 st.markdown("""---""")
 st.write("## Yearly trends")
 
+st.write(daily_average)
+st.write(da2)
+
 #Creating a year x day matrix of mean temperature values for use in the az.plot_hdi function
 interval_data = pd.DataFrame(
     daily_average.loc[
-        daily_average.year<=2022,:
-    ].pivot(
+        daily_average.year<=2024,:
+    ].pivot_table(
         index = "year",columns = "doy", values = "Mean"
         )
 )
@@ -100,12 +104,23 @@ for year_trace in daily_average.year.unique():
         color = "Grey", alpha = 0.1
     )
 
+source_colors = {'Garmin': 'blue', 'NOAA': 'teal'} 
 #Average daily temperature from selected year
-plt.plot(
-    daily_average.loc[daily_average.year == year,"doy"],
-    daily_average.loc[daily_average.year == year,"Mean"], 
-    color = "Red", label = (str(year))
-    )
+# Loop over each source for the selected year
+for source in daily_average.source.unique():
+    # Filter data for the current year and source
+    data = daily_average[(daily_average.year == year) & (daily_average.source == source)]
+    
+    # Only plot if there is data for that source in the selected year
+    if not data.empty:
+        plt.plot(
+            data["doy"],
+            data["Mean"],
+            color=source_colors[source],  # Assign color based on source
+            label=f'{source}',  # Label with the source
+            alpha=0.7  # Adjust transparency for better visualization
+        )
+
 
 plt.grid(axis='y', linestyle = "--")
 ax.set_xlabel("Date")

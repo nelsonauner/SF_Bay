@@ -47,7 +47,7 @@ def import_data():
     for i in d.index:
         d["doy"][i] = doy(d.month[i], d.day[i])
 
-
+    d["source"]="NOAA"
 
     return d
 
@@ -64,7 +64,7 @@ def average_daily_data(data: pd.DataFrame):
         da2 (pd.DataFrame): A dataframe containing the averate temperature for every day of the year across all years
     """
     #Calculating averages for each day for every DOY in the dataset (within each year)
-    daily_average = data.groupby(by = ["year", "month", "day","doy"], as_index = False).agg(Mean = ("temp", np.mean), Sd = ("temp", np.std))
+    daily_average = data.groupby(by = ["year", "month", "day","doy", "source"], as_index = False).agg(Mean = ("temp", np.mean), Sd = ("temp", np.std))
     daily_average.sort_values(by = ["year","month","doy"], inplace = True)
     daily_average.reset_index(inplace = True)
 
@@ -106,4 +106,5 @@ def garmin_data():
         d["doy"][i] = doy(d.month[i], d.day[i])
 
     d=d[["index", "date", "time", "temp", "year", "month", "day", "doy"]]
+    d["source"]="Garmin"
     return(d)

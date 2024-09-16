@@ -68,8 +68,6 @@ except:
 st.markdown("""---""")
 st.write("## Yearly trends")
 
-st.write(daily_average)
-st.write(da2)
 
 #Creating a year x day matrix of mean temperature values for use in the az.plot_hdi function
 interval_data = pd.DataFrame(
